@@ -63,11 +63,11 @@ if __name__ == "__main__":
 
     print(f"{args.model_name} config:")
     for a in model_parser._group_actions:
-        print("\t{}:\t{}".format(a.dest, dict_args[a.dest]))
+        print(f"\t{a.dest}:\t{dict_args[a.dest]}")
 
     print("Training config:")
     for a in train_parser._group_actions:
-        print("\t{}:\t{}".format(a.dest, dict_args[a.dest]))
+        print(f"\t{a.dest}:\t{dict_args[a.dest]}")
 
     # Improve reproducibility
     set_determinism(seed=0)

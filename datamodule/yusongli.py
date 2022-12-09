@@ -13,6 +13,7 @@ from monai.transforms import (
     Orientationd,
     RandCropByPosNegLabeld,
     ScaleIntensityd,
+    ScaleIntensityRanged,
     SpatialPadd,
     ToTensord,
 )
@@ -60,8 +61,10 @@ class YuSongliDataModule(pl.LightningDataModule):
                 [
                     LoadImaged(keys=["image", "label"], reader="NibabelReader"),
                     AddChanneld(keys=["image", "label"]),
-                    Orientationd(keys=["image", "label"], axcodes="LPI"),
-                    ScaleIntensityd(keys=["image"], minv=0.0, maxv=1.0),
+                    # ! <<< open debug yusongli
+                    # Orientationd(keys=["image", "label"], axcodes="LPI"),
+                    # ScaleIntensityd(keys=["image"], minv=0.0, maxv=1.0),
+                    # ! ===
                     SpatialPadd(keys=["image", "label"], spatial_size=train_patch_size, mode="edge"),
                     FgBgToIndicesd(keys=["label"], image_key="image"),
                     RandCropByPosNegLabeld(
@@ -74,7 +77,9 @@ class YuSongliDataModule(pl.LightningDataModule):
                         fg_indices_key="label_fg_indices",
                         bg_indices_key="label_bg_indices",
                     ),
+                    ScaleIntensityRanged(keys=["image"], a_min=0, a_max=1500, b_min=0.0, b_max=1.0, clip=True),
                     DeleteItemsd(keys=["label_fg_indices", "label_bg_indices"]),
+                    # ! >>> clos debug
                     ToTensord(keys=["image", "label"]),
                 ]
             )
@@ -86,8 +91,12 @@ class YuSongliDataModule(pl.LightningDataModule):
                 [
                     LoadImaged(keys=["image", "label"], reader="NibabelReader"),
                     AddChanneld(keys=["image", "label"]),
-                    Orientationd(keys=["image", "label"], axcodes="LPI"),
-                    ScaleIntensityd(keys=["image"], minv=0.0, maxv=1.0),
+                    # ! <<< open debug yusongli
+                    # Orientationd(keys=["image", "label"], axcodes="LPI"),
+                    # ScaleIntensityd(keys=["image"], minv=0.0, maxv=1.0),
+                    # ! ===
+                    ScaleIntensityRanged(keys=["image"], a_min=0, a_max=1500, b_min=0.0, b_max=1.0, clip=True),
+                    # ! >>> clos debug
                     ToTensord(keys=["image", "label"]),
                 ]
             )
