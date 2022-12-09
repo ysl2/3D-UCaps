@@ -20,7 +20,11 @@ from monai.transforms import (
 
 class YuSongliDataModule(pl.LightningDataModule):
 
-    class_weight = np.asarray([0.01361341, 0.47459406, 0.51179253])
+    # ! <<< open debug yusongli
+    # class_weight = np.asarray([0.01361341, 0.47459406, 0.51179253])
+    # ! ===
+    class_weight = np.asarray([0.0363463, 0.9636537])
+    # ! >>> clos debug
 
     def __init__(
         self,
@@ -113,16 +117,16 @@ class YuSongliDataModule(pl.LightningDataModule):
                     'image': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/imagesTr/{idx}_0000.nii.gz',
                     'label': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/labelsTr/{idx}.nii.gz',
                 }
-                # for idx in splits_final[0]['train']
-                for i, idx in enumerate(splits_final[0]['train']) if i <= 100
+                for idx in splits_final[0]['train']
+                # for i, idx in enumerate(splits_final[0]['train']) if i <= 100
             ]
             val_dicts = [
                 {
                     'image': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/imagesTr/{idx}_0000.nii.gz',
                     'label': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/labelsTr/{idx}.nii.gz',
                 }
-                # for idx in splits_final[0]['val']
-                for i, idx in enumerate(splits_final[0]['val']) if i <= 20
+                for idx in splits_final[0]['val']
+                # for i, idx in enumerate(splits_final[0]['val']) if i <= 20
             ]
             # ! >>> clos debug
             return train_dicts, val_dicts
@@ -169,10 +173,13 @@ class YuSongliDataModule(pl.LightningDataModule):
         pass
 
     def calculate_class_weight(self):
-        import ipdb; ipdb.set_trace()  # ! debug yusongli
-        data_dicts = load_decathlon_datalist(
-            os.path.join(self.base_dir, "dataset.json"), data_list_key="training", base_dir=self.base_dir
-        )
+        # ! <<< open debug yusongli
+        # data_dicts = load_decathlon_datalist(
+        #     os.path.join(self.base_dir, "dataset.json"), data_list_key="training", base_dir=self.base_dir
+        # )
+        # ! ===
+        data_dicts, _ = self._load_data_dicts()
+        # ! >>> clos debug
 
         class_weight = []
         for data_dict in data_dicts:
@@ -189,10 +196,13 @@ class YuSongliDataModule(pl.LightningDataModule):
         print("Class weight: ", class_weight)
 
     def calculate_class_percentage(self):
-        import ipdb; ipdb.set_trace()  # ! debug yusongli
-        data_dicts = load_decathlon_datalist(
-            os.path.join(self.base_dir, "dataset.json"), data_list_key="training", base_dir=self.base_dir
-        )
+        # ! <<< open debug yusongli
+        # data_dicts = load_decathlon_datalist(
+        #     os.path.join(self.base_dir, "dataset.json"), data_list_key="training", base_dir=self.base_dir
+        # )
+        # ! ===
+        data_dicts, _ = self._load_data_dicts()
+        # ! >>> clos debug
 
         class_percentage = []
         for data_dict in data_dicts:
@@ -209,6 +219,6 @@ class YuSongliDataModule(pl.LightningDataModule):
 
 
 if __name__ == "__main__":
-    data_module = HippocampusDecathlonDataModule(root_dir="/home/ubuntu/Task04_Hippocampus")
+    data_module = YuSongliDataModule(root_dir="/home/ubuntu/Task04_Hippocampus")
     # data_module.calculate_class_weight()
     data_module.calculate_class_percentage()
