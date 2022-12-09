@@ -5,6 +5,7 @@ from datamodule.heart import HeartDecathlonDataModule
 from datamodule.hippocampus import HippocampusDecathlonDataModule
 from datamodule.iseg import ISeg2017DataModule
 from datamodule.luna import LUNA16DataModule
+from datamodule.yusongli import YuSongliDataModule
 from module.segcaps import SegCaps2D, SegCaps3D
 from module.ucaps import UCaps3D
 from module.unet import UNetModule
@@ -88,6 +89,10 @@ if __name__ == "__main__":
         data_module = LUNA16DataModule(
             **dict_args,
         )
+    elif args.dataset == "yusongli":
+        data_module = YuSongliDataModule(
+            **dict_args,
+        )
     else:
         pass
 
@@ -109,7 +114,7 @@ if __name__ == "__main__":
 
     # set up loggers and checkpoints
 
-    if args.dataset == "iseg2017":
+    if (args.dataset == "iseg2017") or (args.dataset == "yusongli"):
         tb_logger = TensorBoardLogger(save_dir=args.log_dir, name=f"{args.model_name}_{args.dataset}", log_graph=True)
     else:
         tb_logger = TensorBoardLogger(
