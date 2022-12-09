@@ -16,5 +16,5 @@ dependencies:
       - itk==5.2.0.post2
       - matplotlib==3.4.1
       - MedPy==0.4.0
-      - monai==0.6.0
+      - monai==0.7.0
       - torchio==0.18.39

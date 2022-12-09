@@ -6,6 +6,7 @@ from datamodule.heart import HeartDecathlonDataModule
 from datamodule.hippocampus import HippocampusDecathlonDataModule
 from datamodule.iseg import ISeg2017DataModule
 from datamodule.luna import LUNA16DataModule
+from datamodule.yusongli import YuSongliDataModule
 from module.segcaps import SegCaps2D, SegCaps3D
 from module.ucaps import UCaps3D
 from module.unet import UNetModule
@@ -89,6 +90,12 @@ if __name__ == "__main__":
         data_module = LUNA16DataModule(
             **dict_args,
         )
+    # ! <<< open debug yusongli
+    elif args.dataset == "yusongli":
+        data_module = YuSongliDataModule(
+            **dict_args,
+        )
+    # ! >>> clos debug
     else:
         pass
     data_module.setup("validate")
@@ -142,7 +149,12 @@ if __name__ == "__main__":
 
     pred_saver = NiftiSaver(
         output_dir=args.output_dir,
-        output_postfix=f"{args.model_name}_prediction",
+        # ! <<< open debug yusongli
+        # output_postfix=f"{args.model_name}_prediction",
+        # ! ===
+        output_postfix="",
+        separate_folder=False,
+        # ! >>> clos debug
         resample=False,
         data_root_dir=args.root_dir,
         output_dtype=np.uint8,
