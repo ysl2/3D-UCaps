@@ -92,16 +92,39 @@ class YuSongliDataModule(pl.LightningDataModule):
 
     def _load_data_dicts(self, train=True):
         if train:
-            data_dicts = load_decathlon_datalist(
-                os.path.join(self.base_dir, "dataset.json"), data_list_key="training", base_dir=self.base_dir
-            )
-            data_dicts_list = partition_dataset(data_dicts, num_partitions=4, shuffle=True, seed=0)
-            train_dicts, val_dicts = [], []
-            for i, data_dict in enumerate(data_dicts_list):
-                if i == self.fold:
-                    val_dicts.extend(data_dict)
-                else:
-                    train_dicts.extend(data_dict)
+            # ! <<< open debug yusongli
+            # data_dicts = load_decathlon_datalist(
+            #     os.path.join(self.base_dir, "dataset.json"), data_list_key="training", base_dir=self.base_dir
+            # )
+            # data_dicts_list = partition_dataset(data_dicts, num_partitions=4, shuffle=True, seed=0)
+            # train_dicts, val_dicts = [], []
+            # for i, data_dict in enumerate(data_dicts_list):
+            #     if i == self.fold:
+            #         val_dicts.extend(data_dict)
+            #     else:
+            #         train_dicts.extend(data_dict)
+            # ! ===
+            import pickle
+            splits_final = '/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_preprocessed/Task607_CZ2/splits_final.pkl'
+            with open(splits_final, 'rb') as f:
+                splits_final = pickle.load(f)
+            train_dicts = [
+                {
+                    'image': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/imagesTr/{idx}_0000.nii.gz',
+                    'label': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/labelsTr/{idx}.nii.gz',
+                }
+                # for idx in splits_final[0]['train']
+                for i, idx in enumerate(splits_final[0]['train']) if i <= 100
+            ]
+            val_dicts = [
+                {
+                    'image': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/imagesTr/{idx}_0000.nii.gz',
+                    'label': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/labelsTr/{idx}.nii.gz',
+                }
+                # for idx in splits_final[0]['val']
+                for i, idx in enumerate(splits_final[0]['val']) if i <= 20
+            ]
+            # ! >>> clos debug
             return train_dicts, val_dicts
         else:
             pass
@@ -146,6 +169,7 @@ class YuSongliDataModule(pl.LightningDataModule):
         pass
 
     def calculate_class_weight(self):
+        import ipdb; ipdb.set_trace()  # ! debug yusongli
         data_dicts = load_decathlon_datalist(
             os.path.join(self.base_dir, "dataset.json"), data_list_key="training", base_dir=self.base_dir
         )
@@ -165,6 +189,7 @@ class YuSongliDataModule(pl.LightningDataModule):
         print("Class weight: ", class_weight)
 
     def calculate_class_percentage(self):
+        import ipdb; ipdb.set_trace()  # ! debug yusongli
         data_dicts = load_decathlon_datalist(
             os.path.join(self.base_dir, "dataset.json"), data_list_key="training", base_dir=self.base_dir
         )
