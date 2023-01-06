@@ -13,7 +13,11 @@ from module.ucaps import UCaps3D
 from module.unet import UNetModule
 from monai.utils import set_determinism
 from pytorch_lightning import Trainer, seed_everything
-from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
+# ! <<< open debug yusongli
+# from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
+# ! ===
+from pytorch_lightning.callbacks import ModelCheckpoint
+# ! >>> clos debug
 from pytorch_lightning.loggers import TensorBoardLogger
 
 
@@ -55,7 +59,11 @@ if __name__ == "__main__":
         parser, model_parser = SegCaps2D.add_model_specific_args(parser)
     elif temp_args.model_name == "segcaps-3d":
         parser, model_parser = SegCaps3D.add_model_specific_args(parser)
-    elif temp_args.model_name == "unet":
+    # ! <<< open debug yusongli
+    # elif temp_args.model_name == "unet":
+    # ! ===
+    else:
+    # ! >>> clos debug
         parser, model_parser = UNetModule.add_model_specific_args(parser)
 
     args = parser.parse_args()
@@ -113,7 +121,11 @@ if __name__ == "__main__":
         net = SegCaps3D(**dict_args, class_weight=class_weight)
     elif args.model_name == "segcaps-2d":
         net = SegCaps2D(**dict_args, class_weight=class_weight)
-    elif args.model_name == "unet":
+    # ! <<< open debug yusongli
+    # elif args.model_name == "unet":
+    # ! ===
+    else:
+    # ! >>> clos debug
         net = UNetModule(**dict_args, class_weight=class_weight)
 
     # set up loggers and checkpoints
@@ -127,17 +139,28 @@ if __name__ == "__main__":
     checkpoint_callback = ModelCheckpoint(
         filename="{epoch}-{val_dice:.4f}", monitor="val_dice", save_top_k=2, mode="max", save_last=True
     )
-    earlystopping_callback = EarlyStopping(monitor="val_dice", patience=20, mode="max")
+    # ! <<< open debug yusongli
+    # earlystopping_callback = EarlyStopping(monitor="val_dice", patience=20, mode="max")
+    # ! >>> clos debug
 
     trainer = Trainer.from_argparse_args(
         args,
         benchmark=True,
         logger=tb_logger,
-        callbacks=[checkpoint_callback, earlystopping_callback],
+        # ! <<< open debug yusongli
+        # callbacks=[checkpoint_callback, earlystopping_callback],
+        # ! ===
+        callbacks=[checkpoint_callback],
+        # ! >>> clos debug
         num_sanity_val_steps=1,
-        terminate_on_nan=True,
+        # ! <<< open debug yusongli
+        # terminate_on_nan=True,
+        # ! ===
+        terminate_on_nan=False,
+        # ! >>> clos debug
     )
 
     trainer.fit(net, datamodule=data_module)
     print("Best model path ", checkpoint_callback.best_model_path)
     print("Best val mean dice ", checkpoint_callback.best_model_score.item())
+

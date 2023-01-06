@@ -127,7 +127,7 @@ class YuSongliDataModule(pl.LightningDataModule):
                     'label': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/labelsTr/{idx}.nii.gz',
                 }
                 for idx in splits_final[0]['train']
-                # for i, idx in enumerate(splits_final[0]['train']) if i <= 100
+                # for i, idx in enumerate(splits_final[0]['train']) if i <= 10
             ]
             val_dicts = [
                 {
@@ -135,7 +135,7 @@ class YuSongliDataModule(pl.LightningDataModule):
                     'label': f'/home/yusongli/_dataset/shidaoai/img/_out/nn/DATASET/nnUNet_raw_data_base/nnUNet_raw_data/Task607_CZ2/labelsTr/{idx}.nii.gz',
                 }
                 for idx in splits_final[0]['val']
-                # for i, idx in enumerate(splits_final[0]['val']) if i <= 20
+                # for i, idx in enumerate(splits_final[0]['val']) if i <= 2
             ]
             # ! >>> clos debug
             return train_dicts, val_dicts
